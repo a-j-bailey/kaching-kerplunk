@@ -109,27 +109,46 @@ export function PointButton({
           pressed && (isPositive ? styles.greenPressed : styles.redPressed),
         ]}
       >
-        <Text style={[styles.emoji, { fontSize: emojiSize, marginBottom: compact ? 0 : 4 }]}>
-          {copy.emoji}
-        </Text>
-        <Text
-          style={[styles.title, { fontSize: titleSize }]}
-          numberOfLines={1}
-          adjustsFontSizeToFit
-        >
-          {copy.title}
-        </Text>
-        <View style={[styles.badge, compact && styles.badgeCompact]}>
-          <Text
-            style={[
-              styles.points,
-              { fontSize: pointsSize },
-              isPositive ? styles.pointsGreen : styles.pointsRed,
-            ]}
-          >
-            {copy.subtitle}
-          </Text>
-        </View>
+        {compact ? (
+          <View style={styles.compactRow}>
+            <Text style={[styles.emoji, { fontSize: emojiSize, marginBottom: 0 }]}>
+              {copy.emoji}
+            </Text>
+            <View style={[styles.badge, styles.badgeCompact]}>
+              <Text
+                style={[
+                  styles.points,
+                  { fontSize: pointsSize },
+                  isPositive ? styles.pointsGreen : styles.pointsRed,
+                ]}
+              >
+                {copy.subtitle}
+              </Text>
+            </View>
+          </View>
+        ) : (
+          <>
+            <Text style={[styles.emoji, { fontSize: emojiSize }]}>{copy.emoji}</Text>
+            <Text
+              style={[styles.title, { fontSize: titleSize }]}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+            >
+              {copy.title}
+            </Text>
+            <View style={styles.badge}>
+              <Text
+                style={[
+                  styles.points,
+                  { fontSize: pointsSize },
+                  isPositive ? styles.pointsGreen : styles.pointsRed,
+                ]}
+              >
+                {copy.subtitle}
+              </Text>
+            </View>
+          </>
+        )}
       </Pressable>
     </Animated.View>
   );
@@ -154,7 +173,13 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     borderWidth: 3,
     paddingVertical: spacing.xs,
-    paddingHorizontal: spacing.xs,
+    paddingHorizontal: spacing.sm,
+  },
+  compactRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
   },
   green: {
     backgroundColor: colors.green,
@@ -188,9 +213,9 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   badgeCompact: {
-    marginTop: spacing.xs,
+    marginTop: 0,
     paddingHorizontal: 10,
-    paddingVertical: 2,
+    paddingVertical: 4,
     borderRadius: 8,
   },
   points: {
