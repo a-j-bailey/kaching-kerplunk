@@ -170,16 +170,16 @@ const styles = StyleSheet.create({
     elevation: 7,
   },
   buttonCompact: {
-    borderRadius: 14,
+    borderRadius: 12,
     borderWidth: 3,
-    paddingVertical: spacing.xs,
-    paddingHorizontal: spacing.sm,
+    paddingVertical: 0,
+    paddingHorizontal: spacing.md,
   },
   compactRow: {
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.sm,
+    justifyContent: 'space-between',
   },
   green: {
     backgroundColor: colors.green,
