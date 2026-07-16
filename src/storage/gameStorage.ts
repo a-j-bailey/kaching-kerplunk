@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import type { GameStats, ScoreEvent } from '../types';
+import type { GameStats, ScoreEvent, SessionStats } from '../types';
 
 const STORAGE_KEY = '@kaching_kerplunk/game_stats_v1';
 const MAX_HISTORY = 200;
@@ -14,6 +14,15 @@ export const DEFAULT_STATS: GameStats = {
   trucksPassed: 0,
   trucksGotPassed: 0,
   gamesPlayed: 0,
+  history: [],
+};
+
+export const EMPTY_SESSION_STATS: SessionStats = {
+  peakScore: 0,
+  carsPassed: 0,
+  carsGotPassed: 0,
+  trucksPassed: 0,
+  trucksGotPassed: 0,
   history: [],
 };
 
@@ -73,6 +82,32 @@ export function applyEventToStats(
     } else {
       next.trucksGotPassed += 1;
     }
+  }
+
+  return next;
+}
+
+export function applyEventToSession(
+  stats: SessionStats,
+  event: ScoreEvent,
+  nextScore: number,
+): SessionStats {
+  const next: SessionStats = {
+    ...stats,
+    peakScore: Math.max(stats.peakScore, nextScore),
+    history: [event, ...stats.history],
+  };
+
+  if (event.action === 'pass') {
+    if (event.vehicle === 'car') {
+      next.carsPassed += 1;
+    } else {
+      next.trucksPassed += 1;
+    }
+  } else if (event.vehicle === 'car') {
+    next.carsGotPassed += 1;
+  } else {
+    next.trucksGotPassed += 1;
   }
 
   return next;

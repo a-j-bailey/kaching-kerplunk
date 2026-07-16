@@ -21,3 +21,14 @@ export type GameStats = {
   gamesPlayed: number;
   history: ScoreEvent[];
 };
+
+export type SessionStats = {
+  peakScore: number;
+  carsPassed: number;
+  carsGotPassed: number;
+  trucksPassed: number;
+  trucksGotPassed: number;
+  history: ScoreEvent[];
+};
+
+export type StatsScope = 'thisGame' | 'allTime';

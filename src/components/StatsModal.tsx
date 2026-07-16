@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Modal,
   Pressable,
@@ -9,11 +10,13 @@ import {
 
 import { formatPoints } from '../constants/points';
 import { colors, spacing } from '../constants/theme';
-import type { GameStats } from '../types';
+import type { GameStats, ScoreEvent, SessionStats, StatsScope } from '../types';
 
 type StatsModalProps = {
   visible: boolean;
-  stats: GameStats;
+  score: number;
+  sessionStats: SessionStats;
+  allTimeStats: GameStats;
   onClose: () => void;
   onResetScore: () => void;
 };
@@ -27,47 +30,96 @@ function StatRow({ label, value }: { label: string; value: string | number }) {
   );
 }
 
+function HistoryList({ history }: { history: ScoreEvent[] }) {
+  if (history.length === 0) {
+    return <Text style={styles.empty}>No plays yet — hit those big buttons!</Text>;
+  }
+
+  return (
+    <>
+      {history.slice(0, 30).map((event) => (
+        <View key={event.id} style={styles.historyRow}>
+          <Text style={styles.historyLeft}>
+            {event.vehicle === 'car' ? '🚗' : '🚛'}{' '}
+            {event.action === 'pass' ? 'passed' : 'got passed'}
+          </Text>
+          <Text
+            style={[styles.historyPoints, event.points >= 0 ? styles.pos : styles.neg]}
+          >
+            {formatPoints(event.points)}
+          </Text>
+        </View>
+      ))}
+    </>
+  );
+}
+
 export function StatsModal({
   visible,
-  stats,
+  score,
+  sessionStats,
+  allTimeStats,
   onClose,
   onResetScore,
 }: StatsModalProps) {
+  const [scope, setScope] = useState<StatsScope>('thisGame');
+  const isThisGame = scope === 'thisGame';
+
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
       <View style={styles.backdrop}>
         <View style={styles.sheet}>
           <Text style={styles.title}>Game Stats</Text>
-          <Text style={styles.subtitle}>Saved on this device</Text>
+          <Text style={styles.subtitle}>
+            {isThisGame ? 'Current round only' : 'Saved on this device'}
+          </Text>
+
+          <View style={styles.toggle}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ selected: isThisGame }}
+              onPress={() => setScope('thisGame')}
+              style={[styles.toggleBtn, isThisGame && styles.toggleBtnActive]}
+            >
+              <Text style={[styles.toggleText, isThisGame && styles.toggleTextActive]}>
+                This Game
+              </Text>
+            </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ selected: !isThisGame }}
+              onPress={() => setScope('allTime')}
+              style={[styles.toggleBtn, !isThisGame && styles.toggleBtnActive]}
+            >
+              <Text style={[styles.toggleText, !isThisGame && styles.toggleTextActive]}>
+                All Time
+              </Text>
+            </Pressable>
+          </View>
 
           <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
-            <StatRow label="All-time high" value={stats.highScore} />
-            <StatRow label="Games played" value={stats.gamesPlayed} />
-            <StatRow label="Cars passed" value={stats.carsPassed} />
-            <StatRow label="Got passed (cars)" value={stats.carsGotPassed} />
-            <StatRow label="Trucks passed" value={stats.trucksPassed} />
-            <StatRow label="Got passed (trucks)" value={stats.trucksGotPassed} />
-
-            <Text style={styles.historyTitle}>Recent history</Text>
-            {stats.history.length === 0 ? (
-              <Text style={styles.empty}>No plays yet — hit those big buttons!</Text>
+            {isThisGame ? (
+              <>
+                <StatRow label="Current score" value={score} />
+                <StatRow label="Peak this round" value={sessionStats.peakScore} />
+                <StatRow label="Cars passed" value={sessionStats.carsPassed} />
+                <StatRow label="Got passed (cars)" value={sessionStats.carsGotPassed} />
+                <StatRow label="Trucks passed" value={sessionStats.trucksPassed} />
+                <StatRow label="Got passed (trucks)" value={sessionStats.trucksGotPassed} />
+                <Text style={styles.historyTitle}>This round</Text>
+                <HistoryList history={sessionStats.history} />
+              </>
             ) : (
-              stats.history.slice(0, 30).map((event) => (
-                <View key={event.id} style={styles.historyRow}>
-                  <Text style={styles.historyLeft}>
-                    {event.vehicle === 'car' ? '🚗' : '🚛'}{' '}
-                    {event.action === 'pass' ? 'passed' : 'got passed'}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.historyPoints,
-                      event.points >= 0 ? styles.pos : styles.neg,
-                    ]}
-                  >
-                    {formatPoints(event.points)}
-                  </Text>
-                </View>
-              ))
+              <>
+                <StatRow label="All-time high" value={allTimeStats.highScore} />
+                <StatRow label="Games played" value={allTimeStats.gamesPlayed} />
+                <StatRow label="Cars passed" value={allTimeStats.carsPassed} />
+                <StatRow label="Got passed (cars)" value={allTimeStats.carsGotPassed} />
+                <StatRow label="Trucks passed" value={allTimeStats.trucksPassed} />
+                <StatRow label="Got passed (trucks)" value={allTimeStats.trucksGotPassed} />
+                <Text style={styles.historyTitle}>Recent history</Text>
+                <HistoryList history={allTimeStats.history} />
+              </>
             )}
           </ScrollView>
 
@@ -109,6 +161,30 @@ const styles = StyleSheet.create({
     marginTop: 2,
     color: colors.muted,
     fontWeight: '600',
+  },
+  toggle: {
+    marginTop: spacing.md,
+    flexDirection: 'row',
+    backgroundColor: '#ECEFF1',
+    borderRadius: 14,
+    padding: 4,
+    gap: 4,
+  },
+  toggleBtn: {
+    flex: 1,
+    borderRadius: 11,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  toggleBtnActive: {
+    backgroundColor: colors.brand,
+  },
+  toggleText: {
+    fontWeight: '800',
+    color: colors.muted,
+  },
+  toggleTextActive: {
+    color: colors.white,
   },
   scroll: {
     marginTop: spacing.md,

@@ -28,6 +28,7 @@ export default function App() {
   const {
     score,
     stats,
+    sessionStats,
     ready,
     lastDelta,
     recordAction,
@@ -141,7 +142,9 @@ export default function App() {
 
       <StatsModal
         visible={statsOpen}
-        stats={stats}
+        score={score}
+        sessionStats={sessionStats}
+        allTimeStats={stats}
         onClose={() => setStatsOpen(false)}
         onResetScore={() => {
           confirmResetScore(() => setStatsOpen(false));
