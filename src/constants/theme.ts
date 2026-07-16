@@ -38,7 +38,7 @@ export const fonts = {
   mono: Platform.select({
     ios: 'Menlo',
     android: 'monospace',
-    web: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+    web: 'Courier New',
     default: 'monospace',
   }) as string,
 } as const;
