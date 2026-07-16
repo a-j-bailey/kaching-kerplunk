@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useState } from 'react';
 import {
@@ -101,6 +102,28 @@ export default function App() {
 
       <SafeAreaView style={styles.safe}>
         <StatusBar style="light" />
+
+        <View style={styles.topBar}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Stats"
+            hitSlop={8}
+            onPress={() => setStatsOpen(true)}
+            style={({ pressed }) => [styles.iconBtn, pressed && styles.iconBtnPressed]}
+          >
+            <Ionicons name="stats-chart" size={22} color={colors.white} />
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="New round"
+            hitSlop={8}
+            onPress={() => confirmResetScore()}
+            style={({ pressed }) => [styles.iconBtn, pressed && styles.iconBtnPressed]}
+          >
+            <Ionicons name="refresh" size={22} color={colors.white} />
+          </Pressable>
+        </View>
+
         <ScoreHeader
           score={score}
           highScore={stats.highScore}
@@ -128,15 +151,6 @@ export default function App() {
             <PointButton vehicle="truck" action="pass" onPress={handleAction} />
             <PointButton vehicle="truck" action="passed" onPress={handleAction} />
           </View>
-        </View>
-
-        <View style={styles.footer}>
-          <Pressable style={styles.footerBtn} onPress={() => setStatsOpen(true)}>
-            <Text style={styles.footerBtnText}>📊 Stats & History</Text>
-          </Pressable>
-          <Pressable style={styles.footerBtnSecondary} onPress={() => confirmResetScore()}>
-            <Text style={styles.footerBtnSecondaryText}>New Round</Text>
-          </Pressable>
         </View>
       </SafeAreaView>
 
@@ -186,12 +200,34 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
   },
+  topBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.xs,
+    paddingBottom: spacing.xs,
+  },
+  iconBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.14)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.35)',
+  },
+  iconBtnPressed: {
+    backgroundColor: 'rgba(255,255,255,0.28)',
+  },
   board: {
     flex: 1,
     paddingHorizontal: spacing.md,
     paddingTop: spacing.md,
     gap: spacing.md,
     justifyContent: 'center',
+    paddingBottom: spacing.lg,
   },
   hint: {
     textAlign: 'center',
@@ -206,38 +242,5 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     gap: spacing.md,
-  },
-  footer: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    paddingHorizontal: spacing.md,
-    paddingBottom: spacing.lg,
-    paddingTop: spacing.sm,
-  },
-  footerBtn: {
-    flex: 1,
-    backgroundColor: colors.white,
-    borderRadius: 14,
-    paddingVertical: 12,
-    alignItems: 'center',
-    borderWidth: 3,
-    borderColor: colors.brand,
-  },
-  footerBtnText: {
-    fontWeight: '900',
-    color: colors.brand,
-  },
-  footerBtnSecondary: {
-    flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    borderRadius: 14,
-    paddingVertical: 12,
-    alignItems: 'center',
-    borderWidth: 3,
-    borderColor: colors.white,
-  },
-  footerBtnSecondaryText: {
-    fontWeight: '900',
-    color: colors.scoreText,
   },
 });
