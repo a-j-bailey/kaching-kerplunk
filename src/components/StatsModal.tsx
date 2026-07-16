@@ -5,8 +5,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { formatPoints } from '../constants/points';
 import { colors, fonts, spacing } from '../constants/theme';
@@ -64,12 +66,27 @@ export function StatsModal({
 }: StatsModalProps) {
   const [scope, setScope] = useState<StatsScope>('thisGame');
   const isThisGame = scope === 'thisGame';
+  const insets = useSafeAreaInsets();
+  const { height, width } = useWindowDimensions();
+  const sheetMaxHeight = Math.min(height * 0.9, height - Math.max(insets.top, 12));
+  const sheetMaxWidth = Math.min(width, 520);
 
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
       <View style={styles.backdrop}>
-        <View style={styles.sheet}>
-          <Text style={styles.title}>Game Stats</Text>
+        <View
+          style={[
+            styles.sheet,
+            {
+              maxHeight: sheetMaxHeight,
+              maxWidth: sheetMaxWidth,
+              width: '100%',
+              paddingBottom: Math.max(spacing.xl, insets.bottom + spacing.md),
+              paddingLeft: Math.max(spacing.lg, insets.left + spacing.md),
+              paddingRight: Math.max(spacing.lg, insets.right + spacing.md),
+            },
+          ]}
+        >          <Text style={styles.title}>Game Stats</Text>
           <Text style={styles.subtitle}>
             {isThisGame ? 'Current round only' : 'Saved on this device'}
           </Text>
@@ -97,7 +114,12 @@ export function StatsModal({
             </Pressable>
           </View>
 
-          <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
+          <ScrollView
+            style={styles.scroll}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            bounces
+          >
             {isThisGame ? (
               <>
                 <StatRow label="Current score" value={score} />
@@ -142,15 +164,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.overlay,
     justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   sheet: {
-    maxHeight: '88%',
     backgroundColor: colors.white,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingTop: spacing.lg,
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.xl,
   },
   title: {
     fontSize: 26,
@@ -188,6 +208,8 @@ const styles = StyleSheet.create({
   },
   scroll: {
     marginTop: spacing.md,
+    flexGrow: 0,
+    flexShrink: 1,
   },
   scrollContent: {
     paddingBottom: spacing.md,

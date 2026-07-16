@@ -7,9 +7,19 @@ type ScoreHeaderProps = {
   score: number;
   highScore: number;
   lastDelta: number | null;
+  scoreFontSize: number;
+  scoreLineHeight: number;
+  compact?: boolean;
 };
 
-export function ScoreHeader({ score, highScore, lastDelta }: ScoreHeaderProps) {
+export function ScoreHeader({
+  score,
+  highScore,
+  lastDelta,
+  scoreFontSize,
+  scoreLineHeight,
+  compact = false,
+}: ScoreHeaderProps) {
   const bounce = useRef(new Animated.Value(1)).current;
   const flash = useRef(new Animated.Value(0)).current;
 
@@ -43,13 +53,20 @@ export function ScoreHeader({ score, highScore, lastDelta }: ScoreHeaderProps) {
 
   return (
     <View style={styles.wrap}>
-      <View style={styles.panel}>
+      <View
+        style={[
+          styles.panel,
+          compact && styles.panelCompact,
+        ]}
+      >
         <Text style={styles.label}>SCORE</Text>
         <Animated.View style={{ transform: [{ scale: bounce }] }}>
           <Animated.Text
             style={[
               styles.score,
               {
+                fontSize: scoreFontSize,
+                lineHeight: scoreLineHeight,
                 color: flash.interpolate({
                   inputRange: [0, 1],
                   outputRange: [colors.scoreText, flashColor],
@@ -71,10 +88,7 @@ export function ScoreHeader({ score, highScore, lastDelta }: ScoreHeaderProps) {
 const styles = StyleSheet.create({
   wrap: {
     width: '100%',
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.sm,
     alignItems: 'center',
-    gap: spacing.sm,
   },
   panel: {
     width: '100%',
@@ -91,6 +105,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 6,
   },
+  panelCompact: {
+    paddingVertical: spacing.sm,
+    borderRadius: 14,
+    borderWidth: 3,
+  },
   label: {
     fontSize: 14,
     fontWeight: '800',
@@ -98,9 +117,7 @@ const styles = StyleSheet.create({
     color: colors.muted,
   },
   score: {
-    fontSize: 64,
     fontWeight: '900',
-    lineHeight: 72,
     fontFamily: fonts.mono,
     fontVariant: ['tabular-nums'],
   },

@@ -9,10 +9,12 @@
     "scheme": "kachingkerplunk",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.magicmirrorcreative.kachingkerplunk"
+      "bundleIdentifier": "com.magicmirrorcreative.kachingkerplunk",
+      "requireFullScreen": false
     },
     "android": {
       "package": "com.magicmirrorcreative.kachingkerplunk",
+      "softwareKeyboardLayoutMode": "resize",
       "adaptiveIcon": {
         "backgroundColor": "#4FC3F7",
         "foregroundImage": "./assets/android-icon-foreground.png",

@@ -17,6 +17,10 @@ type PointButtonProps = {
   action: ScoreAction;
   onPress: (vehicle: VehicleType, action: ScoreAction) => void;
   style?: ViewStyle;
+  minHeight?: number;
+  titleSize?: number;
+  emojiSize?: number;
+  pointsSize?: number;
 };
 
 const COPY: Record<
@@ -45,7 +49,16 @@ const COPY: Record<
   },
 };
 
-export function PointButton({ vehicle, action, onPress, style }: PointButtonProps) {
+export function PointButton({
+  vehicle,
+  action,
+  onPress,
+  style,
+  minHeight = 140,
+  titleSize = 18,
+  emojiSize = 36,
+  pointsSize = 22,
+}: PointButtonProps) {
   const scale = useRef(new Animated.Value(1)).current;
   const isPositive = action === 'pass';
   const copy = COPY[`${vehicle}-${action}`];
@@ -78,14 +91,21 @@ export function PointButton({ vehicle, action, onPress, style }: PointButtonProp
         onPress={() => onPress(vehicle, action)}
         style={({ pressed }) => [
           styles.button,
+          { minHeight },
           isPositive ? styles.green : styles.red,
           pressed && (isPositive ? styles.greenPressed : styles.redPressed),
         ]}
       >
-        <Text style={styles.emoji}>{copy.emoji}</Text>
-        <Text style={styles.title}>{copy.title}</Text>
+        <Text style={[styles.emoji, { fontSize: emojiSize }]}>{copy.emoji}</Text>
+        <Text style={[styles.title, { fontSize: titleSize }]}>{copy.title}</Text>
         <View style={styles.badge}>
-          <Text style={[styles.points, isPositive ? styles.pointsGreen : styles.pointsRed]}>
+          <Text
+            style={[
+              styles.points,
+              { fontSize: pointsSize },
+              isPositive ? styles.pointsGreen : styles.pointsRed,
+            ]}
+          >
             {copy.subtitle}
           </Text>
         </View>
@@ -96,7 +116,6 @@ export function PointButton({ vehicle, action, onPress, style }: PointButtonProp
 
 const styles = StyleSheet.create({
   button: {
-    minHeight: 140,
     borderRadius: 20,
     borderWidth: 5,
     borderColor: colors.white,
@@ -123,12 +142,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.redPressed,
   },
   emoji: {
-    fontSize: 36,
     marginBottom: 4,
   },
   title: {
     color: colors.white,
-    fontSize: 18,
     fontWeight: '900',
     textAlign: 'center',
     letterSpacing: 0.4,
@@ -144,7 +161,6 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   points: {
-    fontSize: 22,
     fontWeight: '900',
     fontFamily: fonts.mono,
     fontVariant: ['tabular-nums'],

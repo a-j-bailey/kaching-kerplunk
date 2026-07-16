@@ -5,11 +5,11 @@ import {
   ActivityIndicator,
   Alert,
   Pressable,
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { FloatingPoints } from './src/components/FloatingPoints';
 import { PointButton } from './src/components/PointButton';
@@ -17,6 +17,7 @@ import { ScoreHeader } from './src/components/ScoreHeader';
 import { StatsModal } from './src/components/StatsModal';
 import { colors, spacing } from './src/constants/theme';
 import { useGameState } from './src/hooks/useGameState';
+import { useResponsiveLayout } from './src/hooks/useResponsiveLayout';
 import { useSounds } from './src/hooks/useSounds';
 import type { ScoreAction, VehicleType } from './src/types';
 import { triggerScoreHaptics } from './src/utils/haptics';
@@ -25,7 +26,7 @@ type Floater = { id: string; points: number };
 
 const STRIPE_COUNT = 12;
 
-export default function App() {
+function GameScreen() {
   const {
     score,
     stats,
@@ -36,6 +37,7 @@ export default function App() {
     resetScore,
   } = useGameState();
   const { playActionSound } = useSounds();
+  const layout = useResponsiveLayout();
   const [statsOpen, setStatsOpen] = useState(false);
   const [floaters, setFloaters] = useState<Floater[]>([]);
 
@@ -85,10 +87,10 @@ export default function App() {
 
   if (!ready) {
     return (
-      <View style={styles.loading}>
+      <SafeAreaView style={styles.loading} edges={['top', 'bottom', 'left', 'right']}>
         <ActivityIndicator size="large" color={colors.brand} />
         <Text style={styles.loadingText}>Loading Ka-Ching Kerplunk…</Text>
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -100,56 +102,111 @@ export default function App() {
         ))}
       </View>
 
-      <SafeAreaView style={styles.safe}>
+      <SafeAreaView style={styles.safe} edges={['top', 'bottom', 'left', 'right']}>
         <StatusBar style="light" />
 
-        <View style={styles.topBar}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Stats"
-            hitSlop={8}
-            onPress={() => setStatsOpen(true)}
-            style={({ pressed }) => [styles.iconBtn, pressed && styles.iconBtnPressed]}
-          >
-            <Ionicons name="stats-chart" size={22} color={colors.white} />
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="New round"
-            hitSlop={8}
-            onPress={() => confirmResetScore()}
-            style={({ pressed }) => [styles.iconBtn, pressed && styles.iconBtnPressed]}
-          >
-            <Ionicons name="refresh" size={22} color={colors.white} />
-          </Pressable>
-        </View>
-
-        <ScoreHeader
-          score={score}
-          highScore={stats.highScore}
-          lastDelta={lastDelta}
-        />
-
-        <View style={styles.board}>
-          {floaters.map((floater) => (
-            <FloatingPoints
-              key={floater.id}
-              id={floater.id}
-              points={floater.points}
-              onDone={removeFloater}
-            />
-          ))}
-
-          <Text style={styles.hint}>Tap when you pass — or get passed!</Text>
-
-          <View style={styles.row}>
-            <PointButton vehicle="car" action="pass" onPress={handleAction} />
-            <PointButton vehicle="car" action="passed" onPress={handleAction} />
+        <View
+          style={[
+            styles.content,
+            {
+              maxWidth: layout.contentMaxWidth,
+              paddingHorizontal: layout.horizontalPadding,
+            },
+          ]}
+        >
+          <View style={styles.topBar}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Stats"
+              hitSlop={8}
+              onPress={() => setStatsOpen(true)}
+              style={({ pressed }) => [styles.iconBtn, pressed && styles.iconBtnPressed]}
+            >
+              <Ionicons name="stats-chart" size={22} color={colors.white} />
+            </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="New round"
+              hitSlop={8}
+              onPress={() => confirmResetScore()}
+              style={({ pressed }) => [styles.iconBtn, pressed && styles.iconBtnPressed]}
+            >
+              <Ionicons name="refresh" size={22} color={colors.white} />
+            </Pressable>
           </View>
 
-          <View style={styles.row}>
-            <PointButton vehicle="truck" action="pass" onPress={handleAction} />
-            <PointButton vehicle="truck" action="passed" onPress={handleAction} />
+          <ScoreHeader
+            score={score}
+            highScore={stats.highScore}
+            lastDelta={lastDelta}
+            scoreFontSize={layout.scoreFontSize}
+            scoreLineHeight={layout.scoreLineHeight}
+            compact={layout.isCompact}
+          />
+
+          <View
+            style={[
+              styles.board,
+              {
+                gap: layout.boardGap,
+                paddingBottom: Math.max(spacing.md, layout.insets.bottom > 0 ? spacing.sm : spacing.lg),
+              },
+            ]}
+          >
+            {floaters.map((floater) => (
+              <FloatingPoints
+                key={floater.id}
+                id={floater.id}
+                points={floater.points}
+                onDone={removeFloater}
+              />
+            ))}
+
+            <Text style={[styles.hint, { fontSize: layout.hintFontSize }]}>
+              Tap when you pass — or get passed!
+            </Text>
+
+            <View style={[styles.row, { gap: layout.boardGap }]}>
+              <PointButton
+                vehicle="car"
+                action="pass"
+                onPress={handleAction}
+                minHeight={layout.buttonMinHeight}
+                titleSize={layout.buttonTitleSize}
+                emojiSize={layout.buttonEmojiSize}
+                pointsSize={layout.buttonPointsSize}
+              />
+              <PointButton
+                vehicle="car"
+                action="passed"
+                onPress={handleAction}
+                minHeight={layout.buttonMinHeight}
+                titleSize={layout.buttonTitleSize}
+                emojiSize={layout.buttonEmojiSize}
+                pointsSize={layout.buttonPointsSize}
+              />
+            </View>
+
+            <View style={[styles.row, { gap: layout.boardGap }]}>
+              <PointButton
+                vehicle="truck"
+                action="pass"
+                onPress={handleAction}
+                minHeight={layout.buttonMinHeight}
+                titleSize={layout.buttonTitleSize}
+                emojiSize={layout.buttonEmojiSize}
+                pointsSize={layout.buttonPointsSize}
+              />
+              <PointButton
+                vehicle="truck"
+                action="passed"
+                onPress={handleAction}
+                minHeight={layout.buttonMinHeight}
+                titleSize={layout.buttonTitleSize}
+                emojiSize={layout.buttonEmojiSize}
+                pointsSize={layout.buttonPointsSize}
+              />
+            </View>
           </View>
         </View>
       </SafeAreaView>
@@ -165,6 +222,14 @@ export default function App() {
         }}
       />
     </View>
+  );
+}
+
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      <GameScreen />
+    </SafeAreaProvider>
   );
 }
 
@@ -200,11 +265,15 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
   },
+  content: {
+    flex: 1,
+    width: '100%',
+    alignSelf: 'center',
+  },
   topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: spacing.md,
     paddingTop: spacing.xs,
     paddingBottom: spacing.xs,
   },
@@ -223,17 +292,13 @@ const styles = StyleSheet.create({
   },
   board: {
     flex: 1,
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.md,
-    gap: spacing.md,
+    paddingTop: spacing.sm,
     justifyContent: 'center',
-    paddingBottom: spacing.lg,
   },
   hint: {
     textAlign: 'center',
     color: colors.white,
     fontWeight: '800',
-    fontSize: 15,
     textShadowColor: 'rgba(0,0,0,0.45)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
@@ -241,6 +306,5 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    gap: spacing.md,
   },
 });
