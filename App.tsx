@@ -1,4 +1,3 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useState } from 'react';
 import {
@@ -21,6 +20,8 @@ import type { ScoreAction, VehicleType } from './src/types';
 import { triggerScoreHaptics } from './src/utils/haptics';
 
 type Floater = { id: string; points: number };
+
+const STRIPE_COUNT = 12;
 
 export default function App() {
   const {
@@ -65,27 +66,14 @@ export default function App() {
 
   return (
     <View style={styles.root}>
-      <LinearGradient
-        colors={[colors.skyTop, colors.skyMid, colors.skyBottom]}
-        style={StyleSheet.absoluteFill}
-      />
-      <View style={styles.grassTop} />
-      <View style={styles.road}>
-        <View style={styles.laneMarks}>
-          {[0, 1, 2, 3, 4].map((i) => (
-            <View key={`l-${i}`} style={styles.laneDash} />
-          ))}
-        </View>
-        <View style={[styles.laneMarks, styles.laneMarksRight]}>
-          {[0, 1, 2, 3, 4].map((i) => (
-            <View key={`r-${i}`} style={styles.laneDash} />
-          ))}
-        </View>
+      <View style={styles.centerStripes} pointerEvents="none">
+        {Array.from({ length: STRIPE_COUNT }, (_, i) => (
+          <View key={i} style={styles.stripe} />
+        ))}
       </View>
-      <View style={styles.grassBottom} />
 
       <SafeAreaView style={styles.safe}>
-        <StatusBar style="dark" />
+        <StatusBar style="light" />
         <ScoreHeader
           score={score}
           highScore={stats.highScore}
@@ -146,62 +134,31 @@ export default function App() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: colors.skyMid,
+    backgroundColor: colors.road,
   },
   loading: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.skyTop,
+    backgroundColor: colors.road,
     gap: spacing.sm,
   },
   loadingText: {
     fontWeight: '800',
-    color: colors.scoreText,
+    color: colors.white,
   },
-  grassTop: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: '28%',
-    height: 28,
-    backgroundColor: colors.grass,
-  },
-  road: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: '32%',
-    bottom: '18%',
-    backgroundColor: colors.road,
-  },
-  laneMarks: {
-    position: 'absolute',
-    left: 10,
-    top: '8%',
-    bottom: '8%',
-    width: 10,
-    justifyContent: 'space-evenly',
+  centerStripes: {
+    ...StyleSheet.absoluteFill,
     alignItems: 'center',
+    justifyContent: 'space-evenly',
+    paddingVertical: 24,
   },
-  laneMarksRight: {
-    left: undefined,
-    right: 10,
-  },
-  laneDash: {
-    width: 10,
-    height: 28,
-    borderRadius: 4,
+  stripe: {
+    width: 14,
+    height: 36,
+    borderRadius: 3,
     backgroundColor: colors.roadLine,
-    opacity: 0.85,
-  },
-  grassBottom: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: '14%',
-    height: 28,
-    backgroundColor: colors.grassDark,
+    opacity: 0.9,
   },
   safe: {
     flex: 1,
@@ -218,7 +175,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: '800',
     fontSize: 15,
-    textShadowColor: 'rgba(0,0,0,0.35)',
+    textShadowColor: 'rgba(0,0,0,0.45)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
     marginBottom: 4,
@@ -249,7 +206,7 @@ const styles = StyleSheet.create({
   },
   footerBtnSecondary: {
     flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.85)',
+    backgroundColor: 'rgba(255,255,255,0.9)',
     borderRadius: 14,
     paddingVertical: 12,
     alignItems: 'center',
