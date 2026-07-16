@@ -104,13 +104,21 @@ export function PointButton({
         style={({ pressed }) => [
           styles.button,
           compact && styles.buttonCompact,
-          { minHeight },
+          compact ? { height: minHeight, minHeight } : { minHeight },
           isPositive ? styles.green : styles.red,
           pressed && (isPositive ? styles.greenPressed : styles.redPressed),
         ]}
       >
-        <Text style={[styles.emoji, { fontSize: emojiSize }]}>{copy.emoji}</Text>
-        <Text style={[styles.title, { fontSize: titleSize }]}>{copy.title}</Text>
+        <Text style={[styles.emoji, { fontSize: emojiSize, marginBottom: compact ? 0 : 4 }]}>
+          {copy.emoji}
+        </Text>
+        <Text
+          style={[styles.title, { fontSize: titleSize }]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+        >
+          {copy.title}
+        </Text>
         <View style={[styles.badge, compact && styles.badgeCompact]}>
           <Text
             style={[
@@ -145,7 +153,8 @@ const styles = StyleSheet.create({
   buttonCompact: {
     borderRadius: 14,
     borderWidth: 3,
-    paddingVertical: spacing.sm,
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.xs,
   },
   green: {
     backgroundColor: colors.green,
