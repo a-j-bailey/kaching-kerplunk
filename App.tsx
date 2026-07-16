@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -51,6 +52,33 @@ export default function App() {
       ]);
     },
     [playActionSound, recordAction],
+  );
+
+  const confirmResetScore = useCallback(
+    (onConfirm?: () => void) => {
+      if (score === 0) {
+        resetScore();
+        onConfirm?.();
+        return;
+      }
+
+      Alert.alert(
+        'Start a new round?',
+        `This will reset your current score of ${score}. Your high score will be kept.`,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'New Round',
+            style: 'destructive',
+            onPress: () => {
+              resetScore();
+              onConfirm?.();
+            },
+          },
+        ],
+      );
+    },
+    [resetScore, score],
   );
 
   if (!ready) {
@@ -105,7 +133,7 @@ export default function App() {
           <Pressable style={styles.footerBtn} onPress={() => setStatsOpen(true)}>
             <Text style={styles.footerBtnText}>📊 Stats & History</Text>
           </Pressable>
-          <Pressable style={styles.footerBtnSecondary} onPress={resetScore}>
+          <Pressable style={styles.footerBtnSecondary} onPress={() => confirmResetScore()}>
             <Text style={styles.footerBtnSecondaryText}>New Round</Text>
           </Pressable>
         </View>
@@ -116,8 +144,7 @@ export default function App() {
         stats={stats}
         onClose={() => setStatsOpen(false)}
         onResetScore={() => {
-          resetScore();
-          setStatsOpen(false);
+          confirmResetScore(() => setStatsOpen(false));
         }}
       />
     </View>
