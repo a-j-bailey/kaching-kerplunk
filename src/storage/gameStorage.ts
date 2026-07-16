@@ -14,7 +14,6 @@ export const DEFAULT_STATS: GameStats = {
   trucksPassed: 0,
   trucksGotPassed: 0,
   gamesPlayed: 0,
-  bestStreak: 0,
   history: [],
 };
 
@@ -26,8 +25,14 @@ export async function loadGameStats(): Promise<GameStats> {
     }
     const parsed = JSON.parse(raw) as Partial<GameStats>;
     return {
-      ...DEFAULT_STATS,
-      ...parsed,
+      highScore: parsed.highScore ?? DEFAULT_STATS.highScore,
+      totalPasses: parsed.totalPasses ?? DEFAULT_STATS.totalPasses,
+      totalPassed: parsed.totalPassed ?? DEFAULT_STATS.totalPassed,
+      carsPassed: parsed.carsPassed ?? DEFAULT_STATS.carsPassed,
+      carsGotPassed: parsed.carsGotPassed ?? DEFAULT_STATS.carsGotPassed,
+      trucksPassed: parsed.trucksPassed ?? DEFAULT_STATS.trucksPassed,
+      trucksGotPassed: parsed.trucksGotPassed ?? DEFAULT_STATS.trucksGotPassed,
+      gamesPlayed: parsed.gamesPlayed ?? DEFAULT_STATS.gamesPlayed,
       history: Array.isArray(parsed.history) ? parsed.history : [],
     };
   } catch {
@@ -47,12 +52,10 @@ export function applyEventToStats(
   stats: GameStats,
   event: ScoreEvent,
   nextScore: number,
-  nextStreak: number,
 ): GameStats {
   const next: GameStats = {
     ...stats,
     highScore: Math.max(stats.highScore, nextScore),
-    bestStreak: Math.max(stats.bestStreak, nextStreak),
     history: [event, ...stats.history].slice(0, MAX_HISTORY),
   };
 

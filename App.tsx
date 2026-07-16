@@ -26,7 +26,6 @@ const STRIPE_COUNT = 12;
 export default function App() {
   const {
     score,
-    streak,
     stats,
     ready,
     lastDelta,
@@ -76,7 +75,6 @@ export default function App() {
         <ScoreHeader
           score={score}
           highScore={stats.highScore}
-          streak={streak}
           lastDelta={lastDelta}
         />
 

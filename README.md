@@ -19,7 +19,7 @@ Tap the big **green** (add) and **red** (subtract) buttons as you drive. Sounds,
 
 ## Local data
 
-High score, streaks, and play history are stored on-device with AsyncStorage. Nothing is sent to the cloud.
+High score and play history are stored on-device with AsyncStorage. Nothing is sent to the cloud.
 
 ## Run
 

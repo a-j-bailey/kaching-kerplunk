@@ -19,12 +19,5 @@ export type GameStats = {
   trucksPassed: number;
   trucksGotPassed: number;
   gamesPlayed: number;
-  bestStreak: number;
   history: ScoreEvent[];
-};
-
-export type GameSession = {
-  score: number;
-  streak: number;
-  startedAt: number;
 };

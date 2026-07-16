@@ -42,7 +42,6 @@ export function StatsModal({
 
           <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
             <StatRow label="All-time high" value={stats.highScore} />
-            <StatRow label="Best streak" value={stats.bestStreak} />
             <StatRow label="Games played" value={stats.gamesPlayed} />
             <StatRow label="Cars passed" value={stats.carsPassed} />
             <StatRow label="Got passed (cars)" value={stats.carsGotPassed} />

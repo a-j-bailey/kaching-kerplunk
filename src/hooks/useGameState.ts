@@ -15,12 +15,10 @@ function createId(): string {
 
 export function useGameState() {
   const [score, setScore] = useState(0);
-  const [streak, setStreak] = useState(0);
   const [stats, setStats] = useState<GameStats>(DEFAULT_STATS);
   const [ready, setReady] = useState(false);
   const [lastDelta, setLastDelta] = useState<number | null>(null);
   const scoreRef = useRef(0);
-  const streakRef = useRef(0);
   const startedRef = useRef(false);
 
   useEffect(() => {
@@ -40,10 +38,8 @@ export function useGameState() {
   const recordAction = useCallback((vehicle: VehicleType, action: ScoreAction) => {
     const points = getPoints(vehicle, action);
     const nextScore = scoreRef.current + points;
-    const nextStreak = action === 'pass' ? streakRef.current + 1 : 0;
 
     scoreRef.current = nextScore;
-    streakRef.current = nextStreak;
 
     const event: ScoreEvent = {
       id: createId(),
@@ -55,7 +51,6 @@ export function useGameState() {
     };
 
     setScore(nextScore);
-    setStreak(nextStreak);
     setLastDelta(points);
 
     setStats((prevStats) => {
@@ -64,7 +59,7 @@ export function useGameState() {
         startedRef.current = true;
         base = { ...prevStats, gamesPlayed: prevStats.gamesPlayed + 1 };
       }
-      const updated = applyEventToStats(base, event, nextScore, nextStreak);
+      const updated = applyEventToStats(base, event, nextScore);
       void saveGameStats(updated);
       return updated;
     });
@@ -74,16 +69,13 @@ export function useGameState() {
 
   const resetScore = useCallback(() => {
     scoreRef.current = 0;
-    streakRef.current = 0;
     setScore(0);
-    setStreak(0);
     setLastDelta(null);
     startedRef.current = false;
   }, []);
 
   return {
     score,
-    streak,
     stats,
     ready,
     lastDelta,

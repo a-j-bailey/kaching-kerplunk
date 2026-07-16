@@ -6,11 +6,10 @@ import { colors, spacing } from '../constants/theme';
 type ScoreHeaderProps = {
   score: number;
   highScore: number;
-  streak: number;
   lastDelta: number | null;
 };
 
-export function ScoreHeader({ score, highScore, streak, lastDelta }: ScoreHeaderProps) {
+export function ScoreHeader({ score, highScore, lastDelta }: ScoreHeaderProps) {
   const bounce = useRef(new Animated.Value(1)).current;
   const flash = useRef(new Animated.Value(0)).current;
 
@@ -44,7 +43,6 @@ export function ScoreHeader({ score, highScore, streak, lastDelta }: ScoreHeader
 
   return (
     <View style={styles.wrap}>
-      <Text style={styles.brand}>Ka-Ching Kerplunk</Text>
       <View style={styles.panel}>
         <Text style={styles.label}>SCORE</Text>
         <Animated.View style={{ transform: [{ scale: bounce }] }}>
@@ -62,10 +60,7 @@ export function ScoreHeader({ score, highScore, streak, lastDelta }: ScoreHeader
             {score}
           </Animated.Text>
         </Animated.View>
-        <View style={styles.metaRow}>
-          <Text style={styles.highScore}>🏆 High: {highScore}</Text>
-          <Text style={styles.streak}>🔥 Streak: {streak}</Text>
-        </View>
+        <Text style={styles.highScore}>🏆 High: {highScore}</Text>
       </View>
     </View>
   );
@@ -105,21 +100,10 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     lineHeight: 72,
   },
-  metaRow: {
-    marginTop: spacing.xs,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: spacing.sm,
-  },
   highScore: {
+    marginTop: spacing.xs,
     fontSize: 16,
     fontWeight: '800',
     color: colors.highScore,
-  },
-  streak: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: colors.brand,
   },
 });
