@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import { formatPoints } from '../constants/points';
-import { colors, spacing } from '../constants/theme';
+import { colors, fonts, spacing } from '../constants/theme';
 import type { GameStats, ScoreEvent, SessionStats, StatsScope } from '../types';
 
 type StatsModalProps = {
@@ -209,6 +209,8 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     color: colors.scoreText,
     fontSize: 16,
+    fontFamily: fonts.mono,
+    fontVariant: ['tabular-nums'],
   },
   historyTitle: {
     marginTop: spacing.md,
@@ -235,6 +237,8 @@ const styles = StyleSheet.create({
   },
   historyPoints: {
     fontWeight: '900',
+    fontFamily: fonts.mono,
+    fontVariant: ['tabular-nums'],
   },
   pos: {
     color: colors.greenDark,

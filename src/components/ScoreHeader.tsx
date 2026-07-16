@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
 
-import { colors, spacing } from '../constants/theme';
+import { colors, fonts, spacing } from '../constants/theme';
 
 type ScoreHeaderProps = {
   score: number;
@@ -60,7 +60,9 @@ export function ScoreHeader({ score, highScore, lastDelta }: ScoreHeaderProps) {
             {score}
           </Animated.Text>
         </Animated.View>
-        <Text style={styles.highScore}>🏆 High: {highScore}</Text>
+        <Text style={styles.highScore}>
+          🏆 High: <Text style={styles.highScoreValue}>{highScore}</Text>
+        </Text>
       </View>
     </View>
   );
@@ -99,11 +101,18 @@ const styles = StyleSheet.create({
     fontSize: 64,
     fontWeight: '900',
     lineHeight: 72,
+    fontFamily: fonts.mono,
+    fontVariant: ['tabular-nums'],
   },
   highScore: {
     marginTop: spacing.xs,
     fontSize: 16,
     fontWeight: '800',
     color: colors.highScore,
+  },
+  highScoreValue: {
+    fontFamily: fonts.mono,
+    fontVariant: ['tabular-nums'],
+    fontWeight: '800',
   },
 });

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import { formatPoints } from '../constants/points';
-import { colors, spacing } from '../constants/theme';
+import { colors, fonts, spacing } from '../constants/theme';
 import type { ScoreAction, VehicleType } from '../types';
 
 type PointButtonProps = {
@@ -146,6 +146,8 @@ const styles = StyleSheet.create({
   points: {
     fontSize: 22,
     fontWeight: '900',
+    fontFamily: fonts.mono,
+    fontVariant: ['tabular-nums'],
   },
   pointsGreen: {
     color: colors.greenDark,

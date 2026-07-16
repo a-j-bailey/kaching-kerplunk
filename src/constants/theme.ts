@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 export const colors = {
   skyTop: '#4FC3F7',
   skyMid: '#29B6F6',
@@ -30,4 +32,13 @@ export const spacing = {
   md: 16,
   lg: 24,
   xl: 32,
+} as const;
+
+export const fonts = {
+  mono: Platform.select({
+    ios: 'Menlo',
+    android: 'monospace',
+    web: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+    default: 'monospace',
+  }) as string,
 } as const;

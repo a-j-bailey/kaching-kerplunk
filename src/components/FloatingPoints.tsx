@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, Text } from 'react-native';
 
 import { formatPoints } from '../constants/points';
-import { colors } from '../constants/theme';
+import { colors, fonts } from '../constants/theme';
 
 type FloatingPointsProps = {
   id: string;
@@ -75,6 +75,8 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 42,
     fontWeight: '900',
+    fontFamily: fonts.mono,
+    fontVariant: ['tabular-nums'],
     textShadowColor: 'rgba(0,0,0,0.35)',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
