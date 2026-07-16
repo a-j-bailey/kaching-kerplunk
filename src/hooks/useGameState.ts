@@ -5,7 +5,6 @@ import {
   applyEventToStats,
   DEFAULT_STATS,
   loadGameStats,
-  resetGameStats,
   saveGameStats,
 } from '../storage/gameStorage';
 import type { GameStats, ScoreAction, ScoreEvent, VehicleType } from '../types';
@@ -82,17 +81,6 @@ export function useGameState() {
     startedRef.current = false;
   }, []);
 
-  const clearAllData = useCallback(async () => {
-    const fresh = await resetGameStats();
-    scoreRef.current = 0;
-    streakRef.current = 0;
-    setStats(fresh);
-    setScore(0);
-    setStreak(0);
-    setLastDelta(null);
-    startedRef.current = false;
-  }, []);
-
   return {
     score,
     streak,
@@ -101,6 +89,5 @@ export function useGameState() {
     lastDelta,
     recordAction,
     resetScore,
-    clearAllData,
   };
 }

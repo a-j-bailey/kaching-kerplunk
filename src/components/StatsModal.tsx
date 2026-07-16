@@ -16,7 +16,6 @@ type StatsModalProps = {
   stats: GameStats;
   onClose: () => void;
   onResetScore: () => void;
-  onClearAll: () => void;
 };
 
 function StatRow({ label, value }: { label: string; value: string | number }) {
@@ -33,7 +32,6 @@ export function StatsModal({
   stats,
   onClose,
   onResetScore,
-  onClearAll,
 }: StatsModalProps) {
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
@@ -77,9 +75,6 @@ export function StatsModal({
           <View style={styles.actions}>
             <Pressable style={styles.secondaryBtn} onPress={onResetScore}>
               <Text style={styles.secondaryText}>Reset Score</Text>
-            </Pressable>
-            <Pressable style={styles.dangerBtn} onPress={onClearAll}>
-              <Text style={styles.dangerText}>Clear All Data</Text>
             </Pressable>
             <Pressable style={styles.primaryBtn} onPress={onClose}>
               <Text style={styles.primaryText}>Back to Game</Text>
@@ -195,16 +190,6 @@ const styles = StyleSheet.create({
   },
   secondaryText: {
     color: colors.scoreText,
-    fontWeight: '800',
-  },
-  dangerBtn: {
-    backgroundColor: '#FFCDD2',
-    borderRadius: 14,
-    paddingVertical: 12,
-    alignItems: 'center',
-  },
-  dangerText: {
-    color: colors.redDark,
     fontWeight: '800',
   },
 });

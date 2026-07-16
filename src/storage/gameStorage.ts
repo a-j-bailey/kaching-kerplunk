@@ -74,9 +74,3 @@ export function applyEventToStats(
 
   return next;
 }
-
-export async function resetGameStats(): Promise<GameStats> {
-  const fresh = { ...DEFAULT_STATS };
-  await saveGameStats(fresh);
-  return fresh;
-}

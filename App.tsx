@@ -32,7 +32,6 @@ export default function App() {
     lastDelta,
     recordAction,
     resetScore,
-    clearAllData,
   } = useGameState();
   const { playActionSound } = useSounds();
   const [statsOpen, setStatsOpen] = useState(false);
@@ -120,10 +119,6 @@ export default function App() {
         onClose={() => setStatsOpen(false)}
         onResetScore={() => {
           resetScore();
-          setStatsOpen(false);
-        }}
-        onClearAll={() => {
-          void clearAllData();
           setStatsOpen(false);
         }}
       />
