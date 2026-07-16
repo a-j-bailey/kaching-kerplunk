@@ -4,7 +4,7 @@ export const colors = {
   skyTop: '#4FC3F7',
   skyMid: '#29B6F6',
   skyBottom: '#0288D1',
-  road: '#37474F',
+  road: '#1F292E',
   roadLine: '#FFEB3B',
   grass: '#66BB6A',
   grassDark: '#43A047',
