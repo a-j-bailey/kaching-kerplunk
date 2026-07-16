@@ -71,9 +71,16 @@ export default function App() {
       />
       <View style={styles.grassTop} />
       <View style={styles.road}>
-        <View style={styles.roadLine} />
-        <View style={[styles.roadLine, styles.roadLineMid]} />
-        <View style={[styles.roadLine, styles.roadLineBottom]} />
+        <View style={styles.laneMarks}>
+          {[0, 1, 2, 3, 4].map((i) => (
+            <View key={`l-${i}`} style={styles.laneDash} />
+          ))}
+        </View>
+        <View style={[styles.laneMarks, styles.laneMarksRight]}>
+          {[0, 1, 2, 3, 4].map((i) => (
+            <View key={`r-${i}`} style={styles.laneDash} />
+          ))}
+        </View>
       </View>
       <View style={styles.grassBottom} />
 
@@ -168,21 +175,25 @@ const styles = StyleSheet.create({
     bottom: '18%',
     backgroundColor: colors.road,
   },
-  roadLine: {
+  laneMarks: {
     position: 'absolute',
-    left: '12%',
-    right: '12%',
-    top: '18%',
-    height: 8,
+    left: 10,
+    top: '8%',
+    bottom: '8%',
+    width: 10,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+  laneMarksRight: {
+    left: undefined,
+    right: 10,
+  },
+  laneDash: {
+    width: 10,
+    height: 28,
     borderRadius: 4,
     backgroundColor: colors.roadLine,
-    opacity: 0.9,
-  },
-  roadLineMid: {
-    top: '48%',
-  },
-  roadLineBottom: {
-    top: '78%',
+    opacity: 0.85,
   },
   grassBottom: {
     position: 'absolute',
