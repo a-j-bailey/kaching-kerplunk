@@ -207,6 +207,29 @@ function GameScreen() {
                 pointsSize={layout.buttonPointsSize}
               />
             </View>
+
+            <View style={[styles.row, { gap: layout.boardGap }]}>
+              <PointButton
+                vehicle="motorcycle"
+                action="pass"
+                onPress={handleAction}
+                compact
+                minHeight={layout.motorcycleMinHeight}
+                titleSize={layout.motorcycleTitleSize}
+                emojiSize={layout.motorcycleEmojiSize}
+                pointsSize={layout.motorcyclePointsSize}
+              />
+              <PointButton
+                vehicle="motorcycle"
+                action="passed"
+                onPress={handleAction}
+                compact
+                minHeight={layout.motorcycleMinHeight}
+                titleSize={layout.motorcycleTitleSize}
+                emojiSize={layout.motorcycleEmojiSize}
+                pointsSize={layout.motorcyclePointsSize}
+              />
+            </View>
           </View>
         </View>
       </SafeAreaView>

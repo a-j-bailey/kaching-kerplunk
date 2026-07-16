@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import type { GameStats, ScoreEvent, SessionStats } from '../types';
+import type { GameStats, ScoreEvent, SessionStats, VehicleType } from '../types';
 
 const STORAGE_KEY = '@kaching_kerplunk/game_stats_v1';
 const MAX_HISTORY = 200;
@@ -13,6 +13,8 @@ export const DEFAULT_STATS: GameStats = {
   carsGotPassed: 0,
   trucksPassed: 0,
   trucksGotPassed: 0,
+  motorcyclesPassed: 0,
+  motorcyclesGotPassed: 0,
   gamesPlayed: 0,
   history: [],
 };
@@ -23,8 +25,51 @@ export const EMPTY_SESSION_STATS: SessionStats = {
   carsGotPassed: 0,
   trucksPassed: 0,
   trucksGotPassed: 0,
+  motorcyclesPassed: 0,
+  motorcyclesGotPassed: 0,
   history: [],
 };
+
+function incrementVehicleCount(
+  stats: { carsPassed: number; carsGotPassed: number; trucksPassed: number; trucksGotPassed: number; motorcyclesPassed: number; motorcyclesGotPassed: number },
+  vehicle: VehicleType,
+  action: ScoreEvent['action'],
+): void {
+  if (action === 'pass') {
+    switch (vehicle) {
+      case 'car':
+        stats.carsPassed += 1;
+        break;
+      case 'truck':
+        stats.trucksPassed += 1;
+        break;
+      case 'motorcycle':
+        stats.motorcyclesPassed += 1;
+        break;
+      default: {
+        const _exhaustive: never = vehicle;
+        return _exhaustive;
+      }
+    }
+    return;
+  }
+
+  switch (vehicle) {
+    case 'car':
+      stats.carsGotPassed += 1;
+      break;
+    case 'truck':
+      stats.trucksGotPassed += 1;
+      break;
+    case 'motorcycle':
+      stats.motorcyclesGotPassed += 1;
+      break;
+    default: {
+      const _exhaustive: never = vehicle;
+      return _exhaustive;
+    }
+  }
+}
 
 export async function loadGameStats(): Promise<GameStats> {
   try {
@@ -41,6 +86,9 @@ export async function loadGameStats(): Promise<GameStats> {
       carsGotPassed: parsed.carsGotPassed ?? DEFAULT_STATS.carsGotPassed,
       trucksPassed: parsed.trucksPassed ?? DEFAULT_STATS.trucksPassed,
       trucksGotPassed: parsed.trucksGotPassed ?? DEFAULT_STATS.trucksGotPassed,
+      motorcyclesPassed: parsed.motorcyclesPassed ?? DEFAULT_STATS.motorcyclesPassed,
+      motorcyclesGotPassed:
+        parsed.motorcyclesGotPassed ?? DEFAULT_STATS.motorcyclesGotPassed,
       gamesPlayed: parsed.gamesPlayed ?? DEFAULT_STATS.gamesPlayed,
       history: Array.isArray(parsed.history) ? parsed.history : [],
     };
@@ -70,20 +118,11 @@ export function applyEventToStats(
 
   if (event.action === 'pass') {
     next.totalPasses += 1;
-    if (event.vehicle === 'car') {
-      next.carsPassed += 1;
-    } else {
-      next.trucksPassed += 1;
-    }
   } else {
     next.totalPassed += 1;
-    if (event.vehicle === 'car') {
-      next.carsGotPassed += 1;
-    } else {
-      next.trucksGotPassed += 1;
-    }
   }
 
+  incrementVehicleCount(next, event.vehicle, event.action);
   return next;
 }
 
@@ -98,17 +137,6 @@ export function applyEventToSession(
     history: [event, ...stats.history],
   };
 
-  if (event.action === 'pass') {
-    if (event.vehicle === 'car') {
-      next.carsPassed += 1;
-    } else {
-      next.trucksPassed += 1;
-    }
-  } else if (event.vehicle === 'car') {
-    next.carsGotPassed += 1;
-  } else {
-    next.trucksGotPassed += 1;
-  }
-
+  incrementVehicleCount(next, event.vehicle, event.action);
   return next;
 }

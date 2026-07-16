@@ -21,6 +21,7 @@ type PointButtonProps = {
   titleSize?: number;
   emojiSize?: number;
   pointsSize?: number;
+  compact?: boolean;
 };
 
 const COPY: Record<
@@ -47,6 +48,16 @@ const COPY: Record<
     subtitle: formatPoints(-100),
     emoji: '🚛',
   },
+  'motorcycle-pass': {
+    title: 'PASS BIKE',
+    subtitle: formatPoints(20),
+    emoji: '🏍️',
+  },
+  'motorcycle-passed': {
+    title: 'BIKE PASSED',
+    subtitle: formatPoints(-20),
+    emoji: '🏍️',
+  },
 };
 
 export function PointButton({
@@ -58,6 +69,7 @@ export function PointButton({
   titleSize = 18,
   emojiSize = 36,
   pointsSize = 22,
+  compact = false,
 }: PointButtonProps) {
   const scale = useRef(new Animated.Value(1)).current;
   const isPositive = action === 'pass';
@@ -91,6 +103,7 @@ export function PointButton({
         onPress={() => onPress(vehicle, action)}
         style={({ pressed }) => [
           styles.button,
+          compact && styles.buttonCompact,
           { minHeight },
           isPositive ? styles.green : styles.red,
           pressed && (isPositive ? styles.greenPressed : styles.redPressed),
@@ -98,7 +111,7 @@ export function PointButton({
       >
         <Text style={[styles.emoji, { fontSize: emojiSize }]}>{copy.emoji}</Text>
         <Text style={[styles.title, { fontSize: titleSize }]}>{copy.title}</Text>
-        <View style={styles.badge}>
+        <View style={[styles.badge, compact && styles.badgeCompact]}>
           <Text
             style={[
               styles.points,
@@ -128,6 +141,11 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 5 },
     elevation: 7,
+  },
+  buttonCompact: {
+    borderRadius: 14,
+    borderWidth: 3,
+    paddingVertical: spacing.sm,
   },
   green: {
     backgroundColor: colors.green,
@@ -159,6 +177,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 12,
     paddingVertical: 4,
+  },
+  badgeCompact: {
+    marginTop: spacing.xs,
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    borderRadius: 8,
   },
   points: {
     fontWeight: '900',

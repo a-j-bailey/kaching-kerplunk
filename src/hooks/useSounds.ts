@@ -13,10 +13,17 @@ const soundSources = {
 type SoundKey = keyof typeof soundSources;
 
 function getSoundKey(vehicle: VehicleType, action: ScoreAction): SoundKey {
-  if (vehicle === 'car' && action === 'pass') return 'carPass';
-  if (vehicle === 'car' && action === 'passed') return 'carPassed';
-  if (vehicle === 'truck' && action === 'pass') return 'truckPass';
-  return 'truckPassed';
+  switch (vehicle) {
+    case 'truck':
+      return action === 'pass' ? 'truckPass' : 'truckPassed';
+    case 'car':
+    case 'motorcycle':
+      return action === 'pass' ? 'carPass' : 'carPassed';
+    default: {
+      const _exhaustive: never = vehicle;
+      return _exhaustive;
+    }
+  }
 }
 
 export function useSounds() {

@@ -1,4 +1,4 @@
-export type VehicleType = 'car' | 'truck';
+export type VehicleType = 'car' | 'truck' | 'motorcycle';
 export type ScoreAction = 'pass' | 'passed';
 
 export type ScoreEvent = {
@@ -18,6 +18,8 @@ export type GameStats = {
   carsGotPassed: number;
   trucksPassed: number;
   trucksGotPassed: number;
+  motorcyclesPassed: number;
+  motorcyclesGotPassed: number;
   gamesPlayed: number;
   history: ScoreEvent[];
 };
@@ -28,6 +30,8 @@ export type SessionStats = {
   carsGotPassed: number;
   trucksPassed: number;
   trucksGotPassed: number;
+  motorcyclesPassed: number;
+  motorcyclesGotPassed: number;
   history: ScoreEvent[];
 };
 

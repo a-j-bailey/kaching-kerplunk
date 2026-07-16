@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { formatPoints } from '../constants/points';
+import { formatPoints, vehicleEmoji } from '../constants/points';
 import { colors, fonts, spacing } from '../constants/theme';
 import type { GameStats, ScoreEvent, SessionStats, StatsScope } from '../types';
 
@@ -42,7 +42,7 @@ function HistoryList({ history }: { history: ScoreEvent[] }) {
       {history.slice(0, 30).map((event) => (
         <View key={event.id} style={styles.historyRow}>
           <Text style={styles.historyLeft}>
-            {event.vehicle === 'car' ? '🚗' : '🚛'}{' '}
+            {vehicleEmoji(event.vehicle)}{' '}
             {event.action === 'pass' ? 'passed' : 'got passed'}
           </Text>
           <Text
@@ -126,6 +126,8 @@ export function StatsModal({
                 <StatRow label="Peak this round" value={sessionStats.peakScore} />
                 <StatRow label="Cars passed" value={sessionStats.carsPassed} />
                 <StatRow label="Got passed (cars)" value={sessionStats.carsGotPassed} />
+                <StatRow label="Bikes passed" value={sessionStats.motorcyclesPassed} />
+                <StatRow label="Got passed (bikes)" value={sessionStats.motorcyclesGotPassed} />
                 <StatRow label="Trucks passed" value={sessionStats.trucksPassed} />
                 <StatRow label="Got passed (trucks)" value={sessionStats.trucksGotPassed} />
                 <Text style={styles.historyTitle}>This round</Text>
@@ -137,6 +139,8 @@ export function StatsModal({
                 <StatRow label="Games played" value={allTimeStats.gamesPlayed} />
                 <StatRow label="Cars passed" value={allTimeStats.carsPassed} />
                 <StatRow label="Got passed (cars)" value={allTimeStats.carsGotPassed} />
+                <StatRow label="Bikes passed" value={allTimeStats.motorcyclesPassed} />
+                <StatRow label="Got passed (bikes)" value={allTimeStats.motorcyclesGotPassed} />
                 <StatRow label="Trucks passed" value={allTimeStats.trucksPassed} />
                 <StatRow label="Got passed (trucks)" value={allTimeStats.trucksGotPassed} />
                 <Text style={styles.historyTitle}>Recent history</Text>

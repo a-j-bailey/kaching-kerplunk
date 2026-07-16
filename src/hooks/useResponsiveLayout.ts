@@ -30,12 +30,16 @@ export function useResponsiveLayout() {
     contentMaxWidth: Math.min(width, CONTENT_MAX_WIDTH),
     scoreFontSize: Math.round(isShort ? 44 : 64 * scale),
     scoreLineHeight: Math.round(isShort ? 50 : 72 * scale),
-    buttonMinHeight: Math.round(isShort ? 100 : isCompact ? 118 : 140 * heightScale),
+    buttonMinHeight: Math.round(isShort ? 96 : isCompact ? 110 : 132 * heightScale),
+    motorcycleMinHeight: Math.round(isShort ? 64 : isCompact ? 72 : 84 * heightScale),
     buttonTitleSize: Math.round(clamp(18 * widthScale, 14, 20)),
     buttonEmojiSize: Math.round(clamp(36 * scale, 26, 40)),
     buttonPointsSize: Math.round(clamp(22 * scale, 16, 24)),
+    motorcycleTitleSize: Math.round(clamp(14 * widthScale, 12, 15)),
+    motorcycleEmojiSize: Math.round(clamp(24 * scale, 18, 28)),
+    motorcyclePointsSize: Math.round(clamp(16 * scale, 14, 18)),
     hintFontSize: Math.round(clamp(15 * widthScale, 13, 16)),
-    boardGap: isShort ? 10 : 16,
+    boardGap: isShort ? 8 : 14,
     horizontalPadding: width >= 600 ? 24 : 16,
   };
 }

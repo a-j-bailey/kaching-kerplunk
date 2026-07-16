@@ -12,6 +12,8 @@ A playful passing-score game built with Expo (SDK 57) and React Native.
 | --- | --- |
 | Pass a car | +10 |
 | Get passed by a car | −10 |
+| Pass a motorcycle | +20 |
+| Get passed by a motorcycle | −20 |
 | Pass a truck | +100 |
 | Get passed by a truck | −100 |
 
