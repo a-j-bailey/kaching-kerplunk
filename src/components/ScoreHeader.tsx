@@ -79,15 +79,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
   },
-  brand: {
-    fontSize: 28,
-    fontWeight: '900',
-    color: colors.brand,
-    letterSpacing: 0.5,
-    textShadowColor: 'rgba(0,0,0,0.2)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 3,
-  },
   panel: {
     width: '100%',
     backgroundColor: colors.scorePanel,
