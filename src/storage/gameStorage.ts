@@ -1,0 +1,142 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import type { GameStats, ScoreEvent, SessionStats, VehicleType } from '../types';
+
+const STORAGE_KEY = '@kaching_kerplunk/game_stats_v1';
+const MAX_HISTORY = 200;
+
+export const DEFAULT_STATS: GameStats = {
+  highScore: 0,
+  totalPasses: 0,
+  totalPassed: 0,
+  carsPassed: 0,
+  carsGotPassed: 0,
+  trucksPassed: 0,
+  trucksGotPassed: 0,
+  motorcyclesPassed: 0,
+  motorcyclesGotPassed: 0,
+  gamesPlayed: 0,
+  history: [],
+};
+
+export const EMPTY_SESSION_STATS: SessionStats = {
+  peakScore: 0,
+  carsPassed: 0,
+  carsGotPassed: 0,
+  trucksPassed: 0,
+  trucksGotPassed: 0,
+  motorcyclesPassed: 0,
+  motorcyclesGotPassed: 0,
+  history: [],
+};
+
+function incrementVehicleCount(
+  stats: { carsPassed: number; carsGotPassed: number; trucksPassed: number; trucksGotPassed: number; motorcyclesPassed: number; motorcyclesGotPassed: number },
+  vehicle: VehicleType,
+  action: ScoreEvent['action'],
+): void {
+  if (action === 'pass') {
+    switch (vehicle) {
+      case 'car':
+        stats.carsPassed += 1;
+        break;
+      case 'truck':
+        stats.trucksPassed += 1;
+        break;
+      case 'motorcycle':
+        stats.motorcyclesPassed += 1;
+        break;
+      default: {
+        const _exhaustive: never = vehicle;
+        return _exhaustive;
+      }
+    }
+    return;
+  }
+
+  switch (vehicle) {
+    case 'car':
+      stats.carsGotPassed += 1;
+      break;
+    case 'truck':
+      stats.trucksGotPassed += 1;
+      break;
+    case 'motorcycle':
+      stats.motorcyclesGotPassed += 1;
+      break;
+    default: {
+      const _exhaustive: never = vehicle;
+      return _exhaustive;
+    }
+  }
+}
+
+export async function loadGameStats(): Promise<GameStats> {
+  try {
+    const raw = await AsyncStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      return { ...DEFAULT_STATS };
+    }
+    const parsed = JSON.parse(raw) as Partial<GameStats>;
+    return {
+      highScore: parsed.highScore ?? DEFAULT_STATS.highScore,
+      totalPasses: parsed.totalPasses ?? DEFAULT_STATS.totalPasses,
+      totalPassed: parsed.totalPassed ?? DEFAULT_STATS.totalPassed,
+      carsPassed: parsed.carsPassed ?? DEFAULT_STATS.carsPassed,
+      carsGotPassed: parsed.carsGotPassed ?? DEFAULT_STATS.carsGotPassed,
+      trucksPassed: parsed.trucksPassed ?? DEFAULT_STATS.trucksPassed,
+      trucksGotPassed: parsed.trucksGotPassed ?? DEFAULT_STATS.trucksGotPassed,
+      motorcyclesPassed: parsed.motorcyclesPassed ?? DEFAULT_STATS.motorcyclesPassed,
+      motorcyclesGotPassed:
+        parsed.motorcyclesGotPassed ?? DEFAULT_STATS.motorcyclesGotPassed,
+      gamesPlayed: parsed.gamesPlayed ?? DEFAULT_STATS.gamesPlayed,
+      history: Array.isArray(parsed.history) ? parsed.history : [],
+    };
+  } catch {
+    return { ...DEFAULT_STATS };
+  }
+}
+
+export async function saveGameStats(stats: GameStats): Promise<void> {
+  const trimmed: GameStats = {
+    ...stats,
+    history: stats.history.slice(0, MAX_HISTORY),
+  };
+  await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
+}
+
+export function applyEventToStats(
+  stats: GameStats,
+  event: ScoreEvent,
+  nextScore: number,
+): GameStats {
+  const next: GameStats = {
+    ...stats,
+    highScore: Math.max(stats.highScore, nextScore),
+    history: [event, ...stats.history].slice(0, MAX_HISTORY),
+  };
+
+  if (event.action === 'pass') {
+    next.totalPasses += 1;
+  } else {
+    next.totalPassed += 1;
+  }
+
+  incrementVehicleCount(next, event.vehicle, event.action);
+  return next;
+}
+
+export function applyEventToSession(
+  stats: SessionStats,
+  event: ScoreEvent,
+  nextScore: number,
+): SessionStats {
+  const next: SessionStats = {
+    ...stats,
+    peakScore: Math.max(stats.peakScore, nextScore),
+    history: [event, ...stats.history],
+  };
+
+  incrementVehicleCount(next, event.vehicle, event.action);
+  return next;
+}

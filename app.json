@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Ka-Ching Kerplunk",
+    "slug": "kaching-kerplunk",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "kachingkerplunk",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.magicmirrorcreative.kachingkerplunk",
+      "requireFullScreen": false
+    },
+    "android": {
+      "package": "com.magicmirrorcreative.kachingkerplunk",
+      "softwareKeyboardLayoutMode": "resize",
+      "adaptiveIcon": {
+        "backgroundColor": "#4FC3F7",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-audio",
+      "expo-font"
+    ]
+  }
+}
