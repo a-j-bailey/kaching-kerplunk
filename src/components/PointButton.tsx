@@ -39,7 +39,7 @@ const COPY: Record<
     emoji: '🚛',
   },
   'truck-passed': {
-    title: 'TRUCK PASSED YOU',
+    title: 'TRUCK PASSED',
     subtitle: formatPoints(-100),
     emoji: '🚛',
   },
