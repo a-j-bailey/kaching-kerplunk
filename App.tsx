@@ -1,8 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -101,7 +102,7 @@ function GameScreen() {
 
   return (
     <View style={styles.root}>
-      <RoadBackground roadWidth={layout.roadWidth} />
+      <RoadBackground />
 
       <SafeAreaView style={styles.safe} edges={['top', 'bottom', 'left', 'right']}>
         <StatusBar style="light" />
@@ -267,6 +268,22 @@ function GameScreen() {
 }
 
 export default function App() {
+  useEffect(() => {
+    if (Platform.OS !== 'web' || typeof document === 'undefined') {
+      return;
+    }
+
+    const previousHtml = document.documentElement.style.backgroundColor;
+    const previousBody = document.body.style.backgroundColor;
+    document.documentElement.style.backgroundColor = colors.road;
+    document.body.style.backgroundColor = colors.road;
+
+    return () => {
+      document.documentElement.style.backgroundColor = previousHtml;
+      document.body.style.backgroundColor = previousBody;
+    };
+  }, []);
+
   return (
     <SafeAreaProvider>
       <GameScreen />
@@ -277,13 +294,13 @@ export default function App() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: colors.skyBottom,
+    backgroundColor: colors.road,
   },
   loading: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.skyBottom,
+    backgroundColor: colors.road,
     gap: spacing.sm,
   },
   loadingText: {

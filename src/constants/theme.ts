@@ -1,13 +1,8 @@
 import { Platform } from 'react-native';
 
 export const colors = {
-  skyTop: '#4FC3F7',
-  skyMid: '#29B6F6',
-  skyBottom: '#0288D1',
   road: '#1F292E',
   roadLine: '#FFEB3B',
-  grass: '#66BB6A',
-  grassDark: '#43A047',
   scorePanel: '#FFF9C4',
   scoreText: '#1A237E',
   highScore: '#F9A825',

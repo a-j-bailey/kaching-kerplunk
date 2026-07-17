@@ -12,7 +12,6 @@ describe('getResponsiveLayout', () => {
     expect(layout.horizontalPadding).toBe(18);
     expect(layout.buttonTitleSize).toBeGreaterThanOrEqual(13);
     expect(layout.buttonTitleSize).toBeLessThanOrEqual(17);
-    expect(layout.roadWidth).toBeLessThan(layout.width);
     expect(layout.motorcycleTitleSize).toBe(layout.buttonTitleSize);
   });
 

@@ -20,7 +20,6 @@ export type ResponsiveLayout = {
   isCompact: boolean;
   isShort: boolean;
   contentMaxWidth: number;
-  roadWidth: number;
   scoreFontSize: number;
   scoreLineHeight: number;
   buttonMinHeight: number;
@@ -58,10 +57,6 @@ export function getResponsiveLayout(
   // Keep titles readable on web where adjustsFontSizeToFit is unsupported.
   const buttonTitleSize = Math.round(clamp(15.5 * widthScale, 13, 17));
   const contentMaxWidth = Math.min(width, CONTENT_MAX_WIDTH);
-  // Leave grass shoulders visible on both sides of the asphalt lane.
-  const roadWidth = Math.round(
-    clamp(Math.min(width * 0.86, contentMaxWidth - 24), 280, contentMaxWidth),
-  );
 
   return {
     width,
@@ -71,7 +66,6 @@ export function getResponsiveLayout(
     isCompact,
     isShort,
     contentMaxWidth,
-    roadWidth,
     scoreFontSize: Math.round(isShort ? 44 : 60 * scale),
     scoreLineHeight: Math.round(isShort ? 50 : 68 * scale),
     buttonMinHeight: Math.round(isShort ? 92 : isCompact ? 104 : 120 * heightScale),
