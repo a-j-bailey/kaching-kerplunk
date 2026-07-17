@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -12,6 +11,7 @@ import {
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { FloatingPoints } from './src/components/FloatingPoints';
+import { RefreshIcon, StatsIcon } from './src/components/HeaderIcons';
 import { PointButton } from './src/components/PointButton';
 import { RoadBackground } from './src/components/RoadBackground';
 import { ScoreHeader } from './src/components/ScoreHeader';
@@ -128,11 +128,7 @@ function GameScreen() {
                 pressed && styles.iconBtnPressed,
               ]}
             >
-              <Ionicons
-                name="bar-chart"
-                size={layout.iconGlyphSize}
-                color={colors.white}
-              />
+              <StatsIcon size={layout.iconGlyphSize} color={colors.white} />
             </Pressable>
             <Pressable
               accessibilityRole="button"
@@ -145,11 +141,7 @@ function GameScreen() {
                 pressed && styles.iconBtnPressed,
               ]}
             >
-              <Ionicons
-                name="refresh"
-                size={layout.iconGlyphSize}
-                color={colors.white}
-              />
+              <RefreshIcon size={layout.iconGlyphSize} color={colors.white} />
             </Pressable>
           </View>
 
