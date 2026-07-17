@@ -113,8 +113,7 @@ export function PointButton({
           {copy.emoji}
         </Text>
         <Text
-          style={[styles.title, { fontSize: titleSize, lineHeight: titleSize + 4 }]}
-          numberOfLines={2}
+          style={[styles.title, { fontSize: titleSize, lineHeight: titleSize + 3 }]}
           allowFontScaling={false}
         >
           {copy.title}

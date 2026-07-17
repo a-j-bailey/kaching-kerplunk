@@ -14,12 +14,14 @@ type RoadBackgroundProps = {
  */
 export function RoadBackground({ roadWidth }: RoadBackgroundProps) {
   return (
-    <View style={styles.root} pointerEvents="none">
+    <View style={[styles.root, styles.pointerPassthrough]}>
       <LinearGradient
         colors={[colors.skyTop, colors.skyMid, colors.skyBottom]}
-        locations={[0, 0.45, 1]}
+        locations={[0, 0.4, 1]}
         style={styles.sky}
       />
+
+      <View style={styles.horizonGlow} />
 
       <View style={styles.ground}>
         <LinearGradient
@@ -50,17 +52,28 @@ const styles = StyleSheet.create({
   root: {
     ...StyleSheet.absoluteFill,
   },
+  pointerPassthrough: {
+    pointerEvents: 'none',
+  },
   sky: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: '22%',
+    height: '28%',
+  },
+  horizonGlow: {
+    position: 'absolute',
+    top: '22%',
+    left: 0,
+    right: 0,
+    height: 28,
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
   },
   ground: {
     ...StyleSheet.absoluteFill,
     flexDirection: 'row',
-    paddingTop: '18%',
+    paddingTop: '24%',
   },
   shoulder: {
     flex: 1,
@@ -69,14 +82,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: colors.road,
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
+    borderTopWidth: 3,
+    borderTopColor: 'rgba(255,255,255,0.25)',
   },
   edgeLine: {
     width: 3,
-    marginVertical: 12,
+    marginVertical: 10,
     borderRadius: 2,
     backgroundColor: colors.white,
-    opacity: 0.55,
+    opacity: 0.5,
   },
   stripes: {
     position: 'absolute',
@@ -86,13 +101,13 @@ const styles = StyleSheet.create({
     right: 0,
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    paddingVertical: 20,
+    paddingVertical: 16,
   },
   stripe: {
-    width: 12,
-    height: 34,
+    width: 11,
+    height: 30,
     borderRadius: 3,
     backgroundColor: colors.roadLine,
-    opacity: 0.95,
+    opacity: 0.85,
   },
 });

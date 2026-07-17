@@ -128,7 +128,7 @@ function GameScreen() {
               ]}
             >
               <Ionicons
-                name="stats-chart"
+                name="bar-chart"
                 size={layout.iconGlyphSize}
                 color={colors.white}
               />
