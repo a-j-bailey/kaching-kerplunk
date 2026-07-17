@@ -111,9 +111,9 @@ const styles = StyleSheet.create({
     borderWidth: 3,
   },
   label: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '800',
-    letterSpacing: 2,
+    letterSpacing: 2.5,
     color: colors.muted,
   },
   score: {
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   highScore: {
     marginTop: spacing.xs,
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '800',
     color: colors.highScore,
   },

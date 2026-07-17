@@ -49,9 +49,9 @@ export function FloatingPoints({ id, points, onDone }: FloatingPointsProps) {
 
   return (
     <Animated.View
-      pointerEvents="none"
       style={[
         styles.wrap,
+        styles.pointerPassthrough,
         {
           opacity,
           transform: [{ translateY }, { scale }],
@@ -71,6 +71,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     top: '42%',
     zIndex: 20,
+  },
+  pointerPassthrough: {
+    pointerEvents: 'none',
   },
   text: {
     fontSize: 42,

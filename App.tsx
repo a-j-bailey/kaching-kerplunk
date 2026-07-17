@@ -3,7 +3,6 @@ import { StatusBar } from 'expo-status-bar';
 import { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Pressable,
   StyleSheet,
   Text,
@@ -13,6 +12,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { FloatingPoints } from './src/components/FloatingPoints';
 import { PointButton } from './src/components/PointButton';
+import { RoadBackground } from './src/components/RoadBackground';
 import { ScoreHeader } from './src/components/ScoreHeader';
 import { StatsModal } from './src/components/StatsModal';
 import { colors, spacing } from './src/constants/theme';
@@ -20,11 +20,10 @@ import { useGameState } from './src/hooks/useGameState';
 import { useResponsiveLayout } from './src/hooks/useResponsiveLayout';
 import { useSounds } from './src/hooks/useSounds';
 import type { ScoreAction, VehicleType } from './src/types';
+import { showAlert } from './src/utils/alert';
 import { triggerScoreHaptics } from './src/utils/haptics';
 
 type Floater = { id: string; points: number };
-
-const STRIPE_COUNT = 12;
 
 function GameScreen() {
   const {
@@ -66,7 +65,7 @@ function GameScreen() {
         return;
       }
 
-      Alert.alert(
+      showAlert(
         'Start a new round?',
         `This will reset your current score of ${score}. Your high score will be kept.`,
         [
@@ -94,13 +93,15 @@ function GameScreen() {
     );
   }
 
+  const iconBtnStyle = {
+    width: layout.iconButtonSize,
+    height: layout.iconButtonSize,
+    borderRadius: layout.iconButtonSize / 2,
+  };
+
   return (
     <View style={styles.root}>
-      <View style={styles.centerStripes} pointerEvents="none">
-        {Array.from({ length: STRIPE_COUNT }, (_, i) => (
-          <View key={i} style={styles.stripe} />
-        ))}
-      </View>
+      <RoadBackground roadWidth={layout.roadWidth} />
 
       <SafeAreaView style={styles.safe} edges={['top', 'bottom', 'left', 'right']}>
         <StatusBar style="light" />
@@ -120,18 +121,34 @@ function GameScreen() {
               accessibilityLabel="Stats"
               hitSlop={8}
               onPress={() => setStatsOpen(true)}
-              style={({ pressed }) => [styles.iconBtn, pressed && styles.iconBtnPressed]}
+              style={({ pressed }) => [
+                styles.iconBtn,
+                iconBtnStyle,
+                pressed && styles.iconBtnPressed,
+              ]}
             >
-              <Ionicons name="stats-chart" size={22} color={colors.white} />
+              <Ionicons
+                name="bar-chart"
+                size={layout.iconGlyphSize}
+                color={colors.white}
+              />
             </Pressable>
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="New round"
               hitSlop={8}
               onPress={() => confirmResetScore()}
-              style={({ pressed }) => [styles.iconBtn, pressed && styles.iconBtnPressed]}
+              style={({ pressed }) => [
+                styles.iconBtn,
+                iconBtnStyle,
+                pressed && styles.iconBtnPressed,
+              ]}
             >
-              <Ionicons name="refresh" size={22} color={colors.white} />
+              <Ionicons
+                name="refresh"
+                size={layout.iconGlyphSize}
+                color={colors.white}
+              />
             </Pressable>
           </View>
 
@@ -149,7 +166,10 @@ function GameScreen() {
               styles.board,
               {
                 gap: layout.boardGap,
-                paddingBottom: Math.max(spacing.md, layout.insets.bottom > 0 ? spacing.sm : spacing.lg),
+                paddingBottom: Math.max(
+                  spacing.md,
+                  layout.insets.bottom > 0 ? spacing.sm : spacing.lg,
+                ),
               },
             ]}
           >
@@ -213,7 +233,6 @@ function GameScreen() {
                 vehicle="motorcycle"
                 action="pass"
                 onPress={handleAction}
-                compact
                 minHeight={layout.motorcycleMinHeight}
                 titleSize={layout.motorcycleTitleSize}
                 emojiSize={layout.motorcycleEmojiSize}
@@ -223,7 +242,6 @@ function GameScreen() {
                 vehicle="motorcycle"
                 action="passed"
                 onPress={handleAction}
-                compact
                 minHeight={layout.motorcycleMinHeight}
                 titleSize={layout.motorcycleTitleSize}
                 emojiSize={layout.motorcycleEmojiSize}
@@ -259,31 +277,18 @@ export default function App() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: colors.road,
+    backgroundColor: colors.skyBottom,
   },
   loading: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.road,
+    backgroundColor: colors.skyBottom,
     gap: spacing.sm,
   },
   loadingText: {
     fontWeight: '800',
     color: colors.white,
-  },
-  centerStripes: {
-    ...StyleSheet.absoluteFill,
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-    paddingVertical: 24,
-  },
-  stripe: {
-    width: 14,
-    height: 36,
-    borderRadius: 3,
-    backgroundColor: colors.roadLine,
-    opacity: 0.9,
   },
   safe: {
     flex: 1,
@@ -298,20 +303,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: spacing.xs,
-    paddingBottom: spacing.xs,
+    paddingBottom: spacing.sm,
   },
   iconBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(255,255,255,0.14)',
-    borderWidth: 1.5,
-    borderColor: 'rgba(255,255,255,0.35)',
+    backgroundColor: 'rgba(16, 32, 39, 0.55)',
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.85)',
   },
   iconBtnPressed: {
-    backgroundColor: 'rgba(255,255,255,0.28)',
+    backgroundColor: 'rgba(16, 32, 39, 0.75)',
   },
   board: {
     flex: 1,
@@ -322,9 +324,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: colors.white,
     fontWeight: '800',
-    textShadowColor: 'rgba(0,0,0,0.45)',
+    textShadowColor: 'rgba(0,0,0,0.55)',
     textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+    textShadowRadius: 3,
     marginBottom: 4,
   },
   row: {
