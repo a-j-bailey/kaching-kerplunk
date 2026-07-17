@@ -3,7 +3,6 @@ import { StatusBar } from 'expo-status-bar';
 import { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Pressable,
   StyleSheet,
   Text,
@@ -21,6 +20,7 @@ import { useGameState } from './src/hooks/useGameState';
 import { useResponsiveLayout } from './src/hooks/useResponsiveLayout';
 import { useSounds } from './src/hooks/useSounds';
 import type { ScoreAction, VehicleType } from './src/types';
+import { showAlert } from './src/utils/alert';
 import { triggerScoreHaptics } from './src/utils/haptics';
 
 type Floater = { id: string; points: number };
@@ -65,7 +65,7 @@ function GameScreen() {
         return;
       }
 
-      Alert.alert(
+      showAlert(
         'Start a new round?',
         `This will reset your current score of ${score}. Your high score will be kept.`,
         [
