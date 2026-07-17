@@ -20,6 +20,9 @@ export function useResponsiveLayout() {
   const isCompact = usableHeight < 700;
   const isShort = usableHeight < 640;
 
+  // Keep titles readable on web where adjustsFontSizeToFit is unsupported.
+  const buttonTitleSize = Math.round(clamp(15 * widthScale, 12, 16));
+
   return {
     width,
     height,
@@ -28,18 +31,22 @@ export function useResponsiveLayout() {
     isCompact,
     isShort,
     contentMaxWidth: Math.min(width, CONTENT_MAX_WIDTH),
+    // Road lane should clear the button columns so the dashed line sits between them.
+    roadWidth: Math.min(width, CONTENT_MAX_WIDTH) - (width >= 600 ? 8 : 0),
     scoreFontSize: Math.round(isShort ? 44 : 64 * scale),
     scoreLineHeight: Math.round(isShort ? 50 : 72 * scale),
-    buttonMinHeight: Math.round(isShort ? 96 : isCompact ? 110 : 132 * heightScale),
-    motorcycleMinHeight: Math.round(isShort ? 48 : isCompact ? 52 : 56 * heightScale),
-    buttonTitleSize: Math.round(clamp(18 * widthScale, 14, 20)),
-    buttonEmojiSize: Math.round(clamp(36 * scale, 26, 40)),
-    buttonPointsSize: Math.round(clamp(22 * scale, 16, 24)),
-    motorcycleTitleSize: Math.round(clamp(14 * widthScale, 12, 15)),
-    motorcycleEmojiSize: Math.round(clamp(22 * scale, 18, 26)),
-    motorcyclePointsSize: Math.round(clamp(16 * scale, 14, 18)),
+    buttonMinHeight: Math.round(isShort ? 88 : isCompact ? 100 : 118 * heightScale),
+    motorcycleMinHeight: Math.round(isShort ? 78 : isCompact ? 88 : 100 * heightScale),
+    buttonTitleSize,
+    buttonEmojiSize: Math.round(clamp(32 * scale, 24, 36)),
+    buttonPointsSize: Math.round(clamp(18 * scale, 14, 20)),
+    motorcycleTitleSize: buttonTitleSize,
+    motorcycleEmojiSize: Math.round(clamp(28 * scale, 22, 32)),
+    motorcyclePointsSize: Math.round(clamp(16 * scale, 13, 18)),
     hintFontSize: Math.round(clamp(15 * widthScale, 13, 16)),
-    boardGap: isShort ? 8 : 14,
-    horizontalPadding: width >= 600 ? 24 : 16,
+    boardGap: isShort ? 10 : 14,
+    horizontalPadding: width >= 600 ? 28 : 18,
+    iconButtonSize: 48,
+    iconGlyphSize: 24,
   };
 }

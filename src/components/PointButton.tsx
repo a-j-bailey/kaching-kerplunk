@@ -21,7 +21,6 @@ type PointButtonProps = {
   titleSize?: number;
   emojiSize?: number;
   pointsSize?: number;
-  compact?: boolean;
 };
 
 const COPY: Record<
@@ -66,10 +65,9 @@ export function PointButton({
   onPress,
   style,
   minHeight = 140,
-  titleSize = 18,
-  emojiSize = 36,
-  pointsSize = 22,
-  compact = false,
+  titleSize = 15,
+  emojiSize = 34,
+  pointsSize = 20,
 }: PointButtonProps) {
   const scale = useRef(new Animated.Value(1)).current;
   const isPositive = action === 'pass';
@@ -103,52 +101,36 @@ export function PointButton({
         onPress={() => onPress(vehicle, action)}
         style={({ pressed }) => [
           styles.button,
-          compact && styles.buttonCompact,
-          compact ? { height: minHeight, minHeight } : { minHeight },
+          { minHeight },
           isPositive ? styles.green : styles.red,
           pressed && (isPositive ? styles.greenPressed : styles.redPressed),
         ]}
       >
-        {compact ? (
-          <View style={styles.compactRow}>
-            <Text style={[styles.emoji, { fontSize: emojiSize, marginBottom: 0 }]}>
-              {copy.emoji}
-            </Text>
-            <View style={[styles.badge, styles.badgeCompact]}>
-              <Text
-                style={[
-                  styles.points,
-                  { fontSize: pointsSize },
-                  isPositive ? styles.pointsGreen : styles.pointsRed,
-                ]}
-              >
-                {copy.subtitle}
-              </Text>
-            </View>
-          </View>
-        ) : (
-          <>
-            <Text style={[styles.emoji, { fontSize: emojiSize }]}>{copy.emoji}</Text>
-            <Text
-              style={[styles.title, { fontSize: titleSize }]}
-              numberOfLines={1}
-              adjustsFontSizeToFit
-            >
-              {copy.title}
-            </Text>
-            <View style={styles.badge}>
-              <Text
-                style={[
-                  styles.points,
-                  { fontSize: pointsSize },
-                  isPositive ? styles.pointsGreen : styles.pointsRed,
-                ]}
-              >
-                {copy.subtitle}
-              </Text>
-            </View>
-          </>
-        )}
+        <Text
+          style={[styles.emoji, { fontSize: emojiSize, lineHeight: emojiSize + 4 }]}
+          allowFontScaling={false}
+        >
+          {copy.emoji}
+        </Text>
+        <Text
+          style={[styles.title, { fontSize: titleSize, lineHeight: titleSize + 4 }]}
+          numberOfLines={2}
+          allowFontScaling={false}
+        >
+          {copy.title}
+        </Text>
+        <View style={styles.badge}>
+          <Text
+            style={[
+              styles.points,
+              { fontSize: pointsSize },
+              isPositive ? styles.pointsGreen : styles.pointsRed,
+            ]}
+            allowFontScaling={false}
+          >
+            {copy.subtitle}
+          </Text>
+        </View>
       </Pressable>
     </Animated.View>
   );
@@ -156,30 +138,19 @@ export function PointButton({
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 20,
-    borderWidth: 5,
+    borderRadius: 18,
+    borderWidth: 4,
     borderColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: spacing.md,
+    paddingVertical: spacing.sm,
     paddingHorizontal: spacing.sm,
+    gap: 4,
     shadowColor: colors.shadow,
     shadowOpacity: 0.4,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 5 },
     elevation: 7,
-  },
-  buttonCompact: {
-    borderRadius: 12,
-    borderWidth: 3,
-    paddingVertical: 0,
-    paddingHorizontal: spacing.md,
-  },
-  compactRow: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
   },
   green: {
     backgroundColor: colors.green,
@@ -194,29 +165,24 @@ const styles = StyleSheet.create({
     backgroundColor: colors.redPressed,
   },
   emoji: {
-    marginBottom: 4,
+    textAlign: 'center',
   },
   title: {
     color: colors.white,
     fontWeight: '900',
     textAlign: 'center',
-    letterSpacing: 0.4,
+    letterSpacing: 0.2,
     textShadowColor: 'rgba(0,0,0,0.25)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
+    paddingHorizontal: 2,
   },
   badge: {
-    marginTop: spacing.sm,
+    marginTop: 2,
     backgroundColor: colors.white,
     borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-  },
-  badgeCompact: {
-    marginTop: 0,
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 8,
   },
   points: {
     fontWeight: '900',
