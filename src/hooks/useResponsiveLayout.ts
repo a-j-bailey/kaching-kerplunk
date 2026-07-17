@@ -5,14 +5,49 @@ const BASE_WIDTH = 390;
 const BASE_HEIGHT = 844;
 const CONTENT_MAX_WIDTH = 480;
 
+export type LayoutInsets = {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+};
+
+export type ResponsiveLayout = {
+  width: number;
+  height: number;
+  insets: LayoutInsets;
+  scale: number;
+  isCompact: boolean;
+  isShort: boolean;
+  contentMaxWidth: number;
+  roadWidth: number;
+  scoreFontSize: number;
+  scoreLineHeight: number;
+  buttonMinHeight: number;
+  motorcycleMinHeight: number;
+  buttonTitleSize: number;
+  buttonEmojiSize: number;
+  buttonPointsSize: number;
+  motorcycleTitleSize: number;
+  motorcycleEmojiSize: number;
+  motorcyclePointsSize: number;
+  hintFontSize: number;
+  boardGap: number;
+  horizontalPadding: number;
+  iconButtonSize: number;
+  iconGlyphSize: number;
+};
+
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
-export function useResponsiveLayout() {
-  const { width, height } = useWindowDimensions();
-  const insets = useSafeAreaInsets();
-
+/** Pure layout math used by the hook — easy to unit test without RN mocks. */
+export function getResponsiveLayout(
+  width: number,
+  height: number,
+  insets: LayoutInsets,
+): ResponsiveLayout {
   const usableHeight = Math.max(height - insets.top - insets.bottom, 480);
   const widthScale = clamp(width / BASE_WIDTH, 0.82, 1.15);
   const heightScale = clamp(usableHeight / BASE_HEIGHT, 0.72, 1.1);
@@ -53,4 +88,10 @@ export function useResponsiveLayout() {
     iconButtonSize: 48,
     iconGlyphSize: 26,
   };
+}
+
+export function useResponsiveLayout(): ResponsiveLayout {
+  const { width, height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+  return getResponsiveLayout(width, height, insets);
 }
