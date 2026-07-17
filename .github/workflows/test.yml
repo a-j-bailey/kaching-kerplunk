@@ -2,12 +2,12 @@ name: Tests
 
 on:
   push:
-    branches: [main, 'cursor/**']
+    branches: [main]
   pull_request:
     branches: [main]
 
 concurrency:
-  group: tests-${{ github.workflow }}-${{ github.ref }}
+  group: tests-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
